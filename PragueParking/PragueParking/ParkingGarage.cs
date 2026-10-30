@@ -120,4 +120,60 @@ public class ParkingGarage
     {
         return FindVehicle(regNumber, out Vehicle? vehicle, out ParkingSpot? spot);
     }
+
+    public bool CheckOutVehicle(string regNumber)
+    {
+        if (!FindVehicle(regNumber, out Vehicle? vehicle, out ParkingSpot? spot))
+        {
+            return false;
+        }
+
+        return spot.Remove(vehicle);
+    }
+
+    public bool MoveVehicle(string regNumber, int toSpotNumber)
+    {
+        if (!FindVehicle(regNumber, out Vehicle? vehicle, out ParkingSpot? fromSpot))
+        {
+            return false;
+        }
+
+        ParkingSpot? toSpot = GetSpot(toSpotNumber);
+
+        if (toSpot == null || toSpot == fromSpot || !toSpot.CanFit(vehicle))
+        {
+            return false;
+        }
+
+        fromSpot.Remove(vehicle);
+        toSpot.Add(vehicle);
+        return true;
+    }
+
+    public int CountFreeSpots()
+    {
+        int count = 0;
+
+        foreach (ParkingSpot spot in Spots)
+        {
+            if (spot.IsEmpty)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int CountVehicles()
+    {
+        int count = 0;
+
+        foreach (ParkingSpot spot in Spots)
+        {
+            count += spot.Vehicles.Count;
+        }
+
+        return count;
+    }
 }
