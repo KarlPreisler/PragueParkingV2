@@ -61,6 +61,32 @@ public static class GarageMap
         AnsiConsole.Write(grid);
         AnsiConsole.WriteLine();
         ShowLegend();
+        AnsiConsole.WriteLine();
+        ShowParkedVehicles(garage);
+    }
+
+    // Visar de upptagna platserna och fordonen på dem, som översikten i V1.
+    private static void ShowParkedVehicles(ParkingGarage garage)
+    {
+        if (garage.CountVehicles() == 0)
+        {
+            AnsiConsole.MarkupLine("[yellow]P-huset är tomt.[/]");
+            return;
+        }
+
+        Table table = new Table();
+        table.AddColumn("Plats");
+        table.AddColumn("Fordon");
+
+        foreach (ParkingSpot spot in garage.Spots)
+        {
+            if (!spot.IsEmpty)
+            {
+                table.AddRow(spot.Number.ToString(), spot.ToString());
+            }
+        }
+
+        AnsiConsole.Write(table);
     }
 
     private static string GetSpotCell(ParkingSpot spot)
