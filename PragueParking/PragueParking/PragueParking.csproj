@@ -15,4 +15,10 @@
 		<ProjectReference Include="..\PragueParking.DataAccess\PragueParking.DataAccess.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="Data\parkingdata.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

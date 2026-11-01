@@ -1,0 +1,56 @@
+﻿[
+  {
+    "Type": "Car",
+    "RegNumber": "ABC123",
+    "ArrivalTime": "2026-10-28T07:45:00",
+    "SpotNumber": 1
+  },
+  {
+    "Type": "MC",
+    "RegNumber": "MCA111",
+    "ArrivalTime": "2026-10-28T08:05:00",
+    "SpotNumber": 2
+  },
+  {
+    "Type": "MC",
+    "RegNumber": "MCB222",
+    "ArrivalTime": "2026-10-28T08:30:00",
+    "SpotNumber": 2
+  },
+  {
+    "Type": "Car",
+    "RegNumber": "DEF456",
+    "ArrivalTime": "2026-10-27T18:10:00",
+    "SpotNumber": 3
+  },
+  {
+    "Type": "MC",
+    "RegNumber": "MCC333",
+    "ArrivalTime": "2026-10-28T09:15:00",
+    "SpotNumber": 5
+  },
+  {
+    "Type": "Car",
+    "RegNumber": "GHI789",
+    "ArrivalTime": "2026-10-28T10:00:00",
+    "SpotNumber": 7
+  },
+  {
+    "Type": "MC",
+    "RegNumber": "MCD444",
+    "ArrivalTime": "2026-10-28T10:20:00",
+    "SpotNumber": 10
+  },
+  {
+    "Type": "MC",
+    "RegNumber": "MCE555",
+    "ArrivalTime": "2026-10-28T11:40:00",
+    "SpotNumber": 10
+  },
+  {
+    "Type": "Car",
+    "RegNumber": "JKL012",
+    "ArrivalTime": "2026-10-28T12:05:00",
+    "SpotNumber": 12
+  }
+]
