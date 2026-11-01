@@ -2,14 +2,11 @@
 
 namespace PragueParking;
 
-/// <summary>
-/// Huvudmenyn och alla dialoger med personalen. Det här är den enda klassen som skriver
-/// till konsolen. Logiken ligger i ParkingGarage och PriceList.
-/// </summary>
 public class MainMenu
 {
     private const string ParkChoice = "Parkera fordon";
     private const string CheckOutChoice = "Hämta ut fordon";
+    private const string MoveChoice = "Flytta fordon";
     private const string SearchChoice = "Sök fordon";
     private const string ExitChoice = "Avsluta";
     private const string CancelChoice = "Avbryt";
@@ -19,18 +16,12 @@ public class MainMenu
     private ParkingGarage garage;
     private PriceList priceList;
 
-    /// <summary>
-    /// Skapar P-huset och prislistan med standardvärden. Fordonen finns bara i minnet än så länge.
-    /// </summary>
     public MainMenu()
     {
         priceList = new PriceList();
         garage = new ParkingGarage(GarageConfig.CreateDefault());
     }
 
-    /// <summary>
-    /// Visar huvudmenyn tills personalen väljer Avsluta.
-    /// </summary>
     public void Run()
     {
         bool running = true;
@@ -47,6 +38,9 @@ public class MainMenu
                     break;
                 case CheckOutChoice:
                     CheckOutVehicle();
+                    break;
+                case MoveChoice:
+                    MoveVehicle();
                     break;
                 case SearchChoice:
                     SearchVehicle();
@@ -77,7 +71,7 @@ public class MainMenu
     {
         SelectionPrompt<string> prompt = new SelectionPrompt<string>();
         prompt.Title = "Vad vill du göra?";
-        prompt.AddChoices(ParkChoice, CheckOutChoice, SearchChoice, ExitChoice);
+        prompt.AddChoices(ParkChoice, CheckOutChoice, MoveChoice, SearchChoice, ExitChoice);
 
         return AnsiConsole.Prompt(prompt);
     }
@@ -148,6 +142,50 @@ public class MainMenu
         garage.CheckOutVehicle(regNumber);
 
         ShowSuccess($"{vehicle} har hämtats ut från plats {spot.Number}.");
+    }
+
+    private void MoveVehicle()
+    {
+        ShowTitle("Flytta fordon");
+
+        string regNumber = AskRegNumber("Regnr på fordonet som ska flyttas (tomt = avbryt):");
+
+        if (regNumber == "")
+        {
+            ShowInfo("Avbrutet. Inget fordon flyttades.");
+            return;
+        }
+
+        if (!garage.FindVehicle(regNumber, out Vehicle? vehicle, out ParkingSpot? fromSpot))
+        {
+            ShowError($"Hittade inget fordon med regnr {regNumber}.");
+            return;
+        }
+
+        ShowInfo($"{vehicle} står på plats {fromSpot.Number}.");
+
+        int fromNumber = fromSpot.Number;
+        int toNumber = AskSpotNumber($"Flytta till plats (1-{garage.Spots.Count}, 0 = avbryt):");
+
+        if (toNumber == 0)
+        {
+            ShowInfo("Avbrutet. Inget fordon flyttades.");
+            return;
+        }
+
+        if (toNumber == fromNumber)
+        {
+            ShowError($"{vehicle} står redan på plats {toNumber}.");
+            return;
+        }
+
+        if (!garage.MoveVehicle(regNumber, toNumber))
+        {
+            ShowError($"{vehicle} får inte plats på plats {toNumber}. Där står: {garage.GetSpot(toNumber)}.");
+            return;
+        }
+
+        ShowSuccess($"Kör {vehicle} från plats {fromNumber} till plats {toNumber}.");
     }
 
     private void SearchVehicle()
@@ -238,6 +276,22 @@ public class MainMenu
 
             ShowError($"Ogiltigt regnr. Det får vara 1–{RegNumberHelper.MaxLength} tecken " +
                 "och bara innehålla bokstäver och siffror.");
+        }
+    }
+
+    // Frågar efter ett platsnummer mellan 0 och antal platser. 0 betyder avbryt.
+    private int AskSpotNumber(string question)
+    {
+        while (true)
+        {
+            string input = AnsiConsole.Prompt(new TextPrompt<string>(question).AllowEmpty());
+
+            if (int.TryParse(input, out int number) && number >= 0 && number <= garage.Spots.Count)
+            {
+                return number;
+            }
+
+            ShowError($"Skriv ett heltal mellan 0 och {garage.Spots.Count}.");
         }
     }
 
