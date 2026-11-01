@@ -1,0 +1,21 @@
+﻿# ==========================================================
+#  PRISLISTA FÖR PRAGUE PARKING
+# ==========================================================
+#
+# Så här ändrar du priserna:
+#  - Varje inställning står på en egen rad: Namn=Värde
+#  - Ändra bara siffran efter likhetstecknet. Skriv heltal.
+#  - Allt efter tecknet # är en kommentar. Programmet läser inte den.
+#  - Spara filen och välj "Läs in prislistan igen" i programmets meny.
+#
+# Priserna är i CZK per påbörjad timme.
+# ==========================================================
+
+# Pris för bil per påbörjad timme
+Car=20
+
+# Pris för MC per påbörjad timme
+MC=10
+
+# Så många minuter får man stå gratis
+FreeMinutes=10

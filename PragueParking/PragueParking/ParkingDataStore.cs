@@ -5,7 +5,20 @@ namespace PragueParking;
 public class ParkingDataStore
 {
     private const string ConfigFileName = "config.json";
+    private const string PriceListFileName = "pricelist.txt";
     private const string DataFileName = "parkingdata.json";
+
+    public List<string> InvalidPriceLines { get; private set; }
+
+    public ParkingDataStore()
+    {
+        InvalidPriceLines = new List<string>();
+    }
+
+    public string PriceListPath
+    {
+        get { return GetPath(PriceListFileName); }
+    }
 
     public GarageConfig LoadConfig()
     {
@@ -31,6 +44,23 @@ public class ParkingDataStore
         }
 
         return GarageConfig.CreateDefault();
+    }
+
+    public PriceList LoadPriceList()
+    {
+        string path = GetPath(PriceListFileName);
+        PriceList priceList = new PriceList();
+        InvalidPriceLines = new List<string>();
+
+        if (!MyFiles.FileExists(path))
+        {
+            return priceList;
+        }
+
+        string[] lines = MyFiles.ReadLines(path);
+        InvalidPriceLines = priceList.LoadFromLines(lines);
+
+        return priceList;
     }
 
     public bool LoadVehicles(ParkingGarage garage)

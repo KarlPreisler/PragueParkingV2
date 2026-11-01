@@ -25,6 +25,11 @@ public static class MyFiles
         File.WriteAllText(path, json);
     }
 
+    public static string[] ReadLines(string path)
+    {
+        return File.ReadAllLines(path);
+    }
+
     private static JsonSerializerOptions CreateJsonOptions()
     {
         JsonSerializerOptions options = new JsonSerializerOptions();

@@ -9,6 +9,7 @@ public class MainMenu
     private const string MoveChoice = "Flytta fordon";
     private const string SearchChoice = "Sök fordon";
     private const string MapChoice = "Visa karta";
+    private const string ReloadPriceListChoice = "Läs in prislistan igen";
     private const string ExitChoice = "Avsluta";
     private const string CancelChoice = "Avbryt";
     private const string CarChoice = "Bil";
@@ -24,7 +25,7 @@ public class MainMenu
         dataStore = new ParkingDataStore();
 
         GarageConfig config = dataStore.LoadConfig();
-        priceList = new PriceList();
+        priceList = dataStore.LoadPriceList();
         garage = new ParkingGarage(config);
         dataFileOk = dataStore.LoadVehicles(garage);
     }
@@ -62,6 +63,9 @@ public class MainMenu
                 case MapChoice:
                     ShowMap();
                     break;
+                case ReloadPriceListChoice:
+                    ReloadPriceList();
+                    break;
                 case ExitChoice:
                     running = false;
                     break;
@@ -89,7 +93,7 @@ public class MainMenu
         SelectionPrompt<string> prompt = new SelectionPrompt<string>();
         prompt.Title = "Vad vill du göra?";
         prompt.AddChoices(ParkChoice, CheckOutChoice, MoveChoice, SearchChoice,
-            MapChoice, ExitChoice);
+            MapChoice, ReloadPriceListChoice, ExitChoice);
 
         return AnsiConsole.Prompt(prompt);
     }
@@ -237,6 +241,34 @@ public class MainMenu
     {
         ShowTitle("Karta över P-huset");
         GarageMap.ShowMap(garage);
+    }
+
+    private void ReloadPriceList()
+    {
+        ShowTitle("Läs in prislistan igen");
+
+        priceList = dataStore.LoadPriceList();
+
+        foreach (string line in dataStore.InvalidPriceLines)
+        {
+            ShowInfo($"Raden \"{line}\" kunde inte tolkas, så standardpriset gäller.");
+        }
+
+        ShowInfo($"Prislistan lästes från {dataStore.PriceListPath}");
+        ShowPriceList();
+    }
+
+    private void ShowPriceList()
+    {
+        Table table = new Table();
+        table.AddColumn("Fordonstyp");
+        table.AddColumn("Pris per påbörjad timme");
+
+        table.AddRow(Vehicle.GetTypeName(VehicleType.Car), $"{priceList.GetPricePerHour(VehicleType.Car)} CZK");
+        table.AddRow(Vehicle.GetTypeName(VehicleType.MC), $"{priceList.GetPricePerHour(VehicleType.MC)} CZK");
+
+        AnsiConsole.Write(table);
+        AnsiConsole.MarkupLine($"De första [bold]{priceList.FreeMinutes}[/] minuterna är gratis.");
     }
 
     // Visar plats, ankomsttid, parkerad tid och pris för ett fordon.
