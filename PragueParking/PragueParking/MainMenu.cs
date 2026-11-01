@@ -8,6 +8,7 @@ public class MainMenu
     private const string CheckOutChoice = "Hämta ut fordon";
     private const string MoveChoice = "Flytta fordon";
     private const string SearchChoice = "Sök fordon";
+    private const string MapChoice = "Visa karta";
     private const string ExitChoice = "Avsluta";
     private const string CancelChoice = "Avbryt";
     private const string CarChoice = "Bil";
@@ -45,6 +46,9 @@ public class MainMenu
                 case SearchChoice:
                     SearchVehicle();
                     break;
+                case MapChoice:
+                    ShowMap();
+                    break;
                 case ExitChoice:
                     running = false;
                     break;
@@ -63,7 +67,7 @@ public class MainMenu
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(new Rule("[cyan]PRAGUE PARKING[/]"));
-        AnsiConsole.MarkupLine($"Lediga platser: {garage.CountFreeSpots()} av {garage.Spots.Count}");
+        GarageMap.ShowFreeSpots(garage);
         AnsiConsole.WriteLine();
     }
 
@@ -71,7 +75,8 @@ public class MainMenu
     {
         SelectionPrompt<string> prompt = new SelectionPrompt<string>();
         prompt.Title = "Vad vill du göra?";
-        prompt.AddChoices(ParkChoice, CheckOutChoice, MoveChoice, SearchChoice, ExitChoice);
+        prompt.AddChoices(ParkChoice, CheckOutChoice, MoveChoice, SearchChoice,
+            MapChoice, ExitChoice);
 
         return AnsiConsole.Prompt(prompt);
     }
@@ -208,6 +213,12 @@ public class MainMenu
 
         ShowSuccess($"{vehicle} står på plats {spot.Number}.");
         ShowVehicleInfo(vehicle, spot);
+    }
+
+    private void ShowMap()
+    {
+        ShowTitle("Karta över P-huset");
+        GarageMap.ShowMap(garage);
     }
 
     // Visar plats, ankomsttid, parkerad tid och pris för ett fordon.
