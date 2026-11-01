@@ -1,29 +1,32 @@
-# Prague Parking V1
+# Prague Parking V2
 
-Inlämningsuppgift 1. Ett konsolprogram i C# för valet parking vid slottet i Prag. Personalen kan parkera, flytta, hämta ut och söka efter fordon via en enkel textmeny.
+Inlämningsuppgift 2: ett konsolprogram i C# för parkeringshuset i Prag. Gränssnittet är byggt med Spectre.Console.
 
-Gjort av **Karl Preisler** och **Gustav Myhre Gertz**.
+Gjort av **Karl Preisler och Gustav Myhre Gertz**. Koden från version 1 finns i mappen `Prague Parking V1`.
 
-## Funktioner
+## Köra programmet
 
-- **Parkera fordon:** bil eller MC. Programmet säger vilken plats fordonet ska köras till. En MC ställs i första hand bredvid en annan ensam MC.
-- **Flytta fordon:** manuellt till en annan plats, om fordonet får plats där.
-- **Hämta ut fordon:** tar bort fordonet från parkeringen.
-- **Sök fordon:** visar vilken plats ett regnr står på.
-- **Visa parkeringshuset:** färgat rutnät över alla 100 platser (grön = tom, gul = en MC, röd = full) och en lista över upptagna platser.
+1. Öppna `PragueParking\PragueParking.slnx` i Visual Studio 2026 (.NET 10).
+2. Tryck **F5**.
 
-## Starta programmet
+Första gången hämtar Visual Studio NuGet-paketen (Spectre.Console och MSTest), så datorn behöver internet.
+Om ett annat projekt startar: högerklicka på **PragueParking** i Solution Explorer och välj **Set as Startup Project**.
 
-**Krav:** .NET 10 SDK och Visual Studio 2026 (eller annan miljö med .NET 10).
+## Filerna
 
-1. Klona repot eller ladda ner det som ZIP.
-2. Öppna `Prague Parking V1/Prague Parking V1.slnx` i Visual Studio.
-3. Tryck **F5** eller **Ctrl+F5**.
+Filerna ligger i `PragueParking\PragueParking\Data`. När lösningen byggs kopieras de till programmets mapp,
+och det är kopiorna som programmet läser och sparar.
 
-Utan Visual Studio kan programmet köras från repots rotmapp:
+| Fil | Innehåll |
+|---|---|
+| `parkingdata.json` | De parkerade fordonen. Innehåller testdata och uppdateras vid varje parkering, uthämtning och flytt. |
+| `config.json` | Antal platser och hur många fordon av varje typ som får stå på en plats. Läses när programmet startar. |
+| `pricelist.txt` | Priser per påbörjad timme och antal gratisminuter. Instruktionerna står i filen. |
 
-```bash
-dotnet run --project "Prague Parking V1/Prague Parking V1"
-```
+- **Ändra prislistan medan programmet körs:** välj **Läs in prislistan igen** och öppna filen på sökvägen som visas.
+  Ändra, spara och välj menyvalet igen.
+- **Återställa testdatan:** välj **Build → Rebuild Solution**.
 
-Inga NuGet-paket eller andra inställningar behövs.
+## Tester
+
+Kör enhetstesterna med **Test → Run All Tests**.
