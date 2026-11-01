@@ -1,0 +1,14 @@
+﻿{
+  "NumberOfSpots": 100,
+  "SpotSize": 4,
+  "VehicleTypes": [
+    {
+      "Type": "Car",
+      "VehiclesPerSpot": 1
+    },
+    {
+      "Type": "MC",
+      "VehiclesPerSpot": 2
+    }
+  ]
+}

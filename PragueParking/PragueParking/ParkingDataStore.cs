@@ -4,7 +4,34 @@ namespace PragueParking;
 
 public class ParkingDataStore
 {
+    private const string ConfigFileName = "config.json";
     private const string DataFileName = "parkingdata.json";
+
+    public GarageConfig LoadConfig()
+    {
+        string path = GetPath(ConfigFileName);
+
+        if (!MyFiles.FileExists(path))
+        {
+            return GarageConfig.CreateDefault();
+        }
+
+        try
+        {
+            GarageConfig? config = MyFiles.ReadJson<GarageConfig>(path);
+
+            if (config != null && config.IsValid())
+            {
+                return config;
+            }
+        }
+        catch (Exception)
+        {
+            // Filen är inte giltig JSON. Då används standardinställningarna nedan.
+        }
+
+        return GarageConfig.CreateDefault();
+    }
 
     public bool LoadVehicles(ParkingGarage garage)
     {
@@ -34,11 +61,11 @@ public class ParkingDataStore
 
         foreach (ParkingRecord record in records)
         {
-            // Filen kan ha ändrats för hand, så regnr görs om till versaler utan mellansag.
+            // Filen kan ha ändrats för hand, så regnr görs om till versaler utan mellanslag.
             string regNumber = RegNumberHelper.Normalize(record.RegNumber);
             Vehicle vehicle = garage.CreateVehicle(record.Type, regNumber, record.ArrivalTime);
 
-            // Finns platsen inte längre, till exempel om antalet platser har minskas,
+            // Finns platsen inte längre, till exempel om antalet platser har minskats,
             // ställs fordonet på en ledig plats i stället.
             if (!garage.ParkVehicleAt(vehicle, record.SpotNumber))
             {
